@@ -16,11 +16,11 @@ jobs:
     name: Ubuntu bundled build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     - uses: actions/setup-python@v4
       with:
         python-version: "3.11"
-
+        
     - name: Install conan
       run: python3 -m pip install conan==1.60.0
 
@@ -33,8 +33,8 @@ jobs:
         mkdir build
         cd build
         conan install .. --build missing
-        #cmake ..
-        #cmake --build . -j8
+        cmake ..
+        cmake --build . -j8
 
         #- name: Verification
         #  run: |
