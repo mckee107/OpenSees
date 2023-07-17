@@ -17,7 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
+    - name: Recompile python with "enable-shared"
+      run: PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install --force 3.10.6
+      
     - name: Install conan
       run: python3 -m pip install conan==1.60.0
 
