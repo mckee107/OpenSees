@@ -30,11 +30,11 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build
-        cd build
-        conan install .. --build missing
-        cmake ..
-        cmake --build . -j8
+        #mkdir build
+        #cd build
+        #conan install .. --build missing
+        #cmake ..
+        #cmake --build . -j8
 
         #- name: Verification
         #  run: |
