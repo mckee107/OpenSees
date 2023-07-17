@@ -73,8 +73,12 @@ jobs:
     - name: Checkout sources
       uses: actions/checkout@v2
     - name: Setup Fortran
-      uses: awvwgk/setup-fortran@v1.1    
-    
+      #uses: awvwgk/setup-fortran@v1.1    
+      uses: fortran-lang/setup-fpm@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: fpm run
+      
     - name: Install conan
       run: python3 -m pip install conan==1.60.0
 
