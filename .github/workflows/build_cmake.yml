@@ -1,5 +1,5 @@
 name: CMake Build
-run-name: ${{ github.actor }} is building OpenSees
+run-name: ${{ github.actor }} is building OpenSees triggered by a ${{ github.event_name }} event
 env:
   CMAKE_VERSION: 3.27.1
   BUILD_TYPE: Debug
