@@ -85,7 +85,7 @@ jobs:
           run: |
             mkdir build
             cd build
-            "C:/Program Files(x86)/Intel/oneAPI/setvars.bat" intel64
+            "C:/Program Files(x86)/Intel/oneAPI/setvars.bat"
             cmake ..
             cmake --build . --target OpenSeesTcl -j8
 
