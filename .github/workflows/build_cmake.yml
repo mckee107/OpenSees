@@ -68,12 +68,11 @@ jobs:
 
 
   build-windows:
-        name: Build on Windows
+        name: Windows build
         runs-on: [windows-latest]
         steps:
         - name: Checkout Sources
           uses: actions/checkout@v2
-          with: {ref: cmake-build}
         - name: Setup MSBuild
           uses: microsoft/setup-msbuild@v1
 
@@ -84,6 +83,6 @@ jobs:
             mkdir build
             cd build
             cmake ..
-            cmake --build . --target OpenSeesTcl -j5
+            cmake --build . --target OpenSeesTcl -j8
 
 
