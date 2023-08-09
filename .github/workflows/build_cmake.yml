@@ -1,7 +1,7 @@
 name: CMake Build
 
 env:
-  CMAKE_VERSION: 3.20.1
+  CMAKE_VERSION: 3.27.1
   BUILD_TYPE: Debug
 
 on:
@@ -10,6 +10,8 @@ on:
 
   pull_request:
     branches: [master]
+    
+  workflow_dispatch:
 
 jobs:
   build-ubuntu:
