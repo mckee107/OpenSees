@@ -66,24 +66,24 @@ jobs:
 #          run: |
 #            mpiexec -np 2 python ../EXAMPLES/ExamplePython/example_mpi_paralleltruss_explicit.py
 
-# Not building on Windows until we can figure out how to use Fortran
-# with Github Actions
-    #  build-win32:
-    #    name: Build on Windows
-    #    runs-on: [windows-latest]
-    #    steps:
-    #    - name: Checkout sources
-    #      uses: actions/checkout@v2
-    #      with: {ref: cmake-build}
-    #    
-    #    - name: Install Conan
-    #      uses: turtlebrowser/get-conan@main
-    #
-    #    - name: Build
-    #      run: |
-    #        mkdir build
-    #        cd build
-    #        cmake ..
-    #        cmake --build . --target OpenSeesTcl -j5
+
+  build-windows:
+        name: Build on Windows
+        runs-on: [windows-latest]
+        steps:
+        - name: Checkout Sources
+          uses: actions/checkout@v2
+          with: {ref: cmake-build}
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1
+
+
+    
+        - name: Build
+          run: |
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build . --target OpenSeesTcl -j5
 
 
