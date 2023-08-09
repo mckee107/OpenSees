@@ -1,5 +1,5 @@
 name: CMake Build
-
+run-name: ${{ github.actor }} is building OpenSees
 env:
   CMAKE_VERSION: 3.27.1
   BUILD_TYPE: Debug
