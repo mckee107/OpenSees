@@ -34,7 +34,6 @@ jobs:
       run: |
         mkdir build
         cd build
-        "C:/Program Files(x86)/Intel/oneAPI/setvars.bat" intel64
         conan install .. --build missing
         cmake ..
         cmake --build . -j8
@@ -78,11 +77,15 @@ jobs:
           uses: microsoft/setup-msbuild@v1
         - name: Setup Fortran
           uses: mckee107/setup-fortran@v1.1.1
+          with:
+            compiler: intel
+            version: 2023.2
           
         - name: Build
           run: |
             mkdir build
             cd build
+            "C:/Program Files(x86)/Intel/oneAPI/setvars.bat" intel64
             cmake ..
             cmake --build . --target OpenSeesTcl -j8
 
