@@ -34,6 +34,7 @@ jobs:
       run: |
         mkdir build
         cd build
+        "C:/Program Files(x86)/Intel/oneAPI/setvars.bat" intel64
         conan install .. --build missing
         cmake ..
         cmake --build . -j8
