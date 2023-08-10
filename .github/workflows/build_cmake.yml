@@ -85,8 +85,8 @@ jobs:
           run: |
             mkdir build
             cd build
-            source "%ONEAPI_ROOT%\setvars.bat"
-            cmake ..
+            call "%ONEAPI_ROOT%\setvars.bat"
+            cmake .. 
             cmake --build . --target OpenSeesTcl -j8
 
 
