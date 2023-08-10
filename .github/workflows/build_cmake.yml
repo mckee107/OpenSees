@@ -82,10 +82,11 @@ jobs:
             version: 2023.2
           
         - name: Build
+          shell: cmd
           run: |
             mkdir build
             cd build
-            call "%ONEAPI_ROOT%\setvars.bat"
+            call "%ONEAPI_ROOT%\setvars.bat" --force
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
 
