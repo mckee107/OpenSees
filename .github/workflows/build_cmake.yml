@@ -91,6 +91,7 @@ jobs:
           run: |
             mkdir build
             cd build
+            cmake --version
             conan install .. --build missing
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
