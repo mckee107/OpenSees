@@ -74,8 +74,8 @@ jobs:
         - name: Checkout Sources
           uses: actions/checkout@v2
           
-        - name: Setup MSBuild
-          uses: microsoft/setup-msbuild@v1
+        #- name: Setup MSBuild
+        #  uses: microsoft/setup-msbuild@v1
           
         - name: Setup Fortran
           uses: mckee107/setup-fortran@v1.1.2
