@@ -79,6 +79,7 @@ jobs:
           
         - name: Setup Fortran
           uses: mckee107/setup-fortran@v1.1.2
+          id: setup-fortran
           with:
             compiler: intel
             version: 2023.2
