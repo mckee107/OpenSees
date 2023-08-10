@@ -78,7 +78,7 @@ jobs:
         #  uses: microsoft/setup-msbuild@v1
           
         - name: Setup Fortran
-          uses: mckee107/setup-fortran@v1.1.2
+          uses: mckee107/setup-fortran@main
           id: setup-fortran
           with:
             compiler: intel
