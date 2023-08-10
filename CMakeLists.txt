@@ -1,3 +1,4 @@
+
 #==============================================================================
 # 
 #        OpenSees -- Open System For Earthquake Engineering Simulation
@@ -18,7 +19,14 @@
 #
 #==============================================================================
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.23.0)
+if (CMAKE_HOST_WIN32)
+# need CMake 3.25.0+ for IntelLLVM support of target link properties on Windows
+cmake_minimum_required(VERSION 3.25)
+else()
+# CMake 3.20.5 is the minimum recommended for IntelLLVM on Linux
+cmake_minimum_required(VERSION 3.20.5)
+endif()
 project(OpenSeesFramework LANGUAGES C CXX Fortran)
 
 
@@ -28,7 +36,8 @@ set(OPS_EXTERNALS_DIR "${PROJECT_SOURCE_DIR}/OTHER/")
 set(OPS_BUNDLED_DIR "${PROJECT_SOURCE_DIR}/OTHER/")
 set(OPS_SRC_DIR "${PROJECT_SOURCE_DIR}/SRC/")
 
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${PROJECT_SOURCE_DIR}/cmake/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "C:/Program Files/CMake/share/cmake-3.27/Modules" "${PROJECT_SOURCE_DIR}/cmake/cmake")
+#MESSAGE("CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 include(OpenSeesFunctions)
 
 # include user config
@@ -39,33 +48,54 @@ include(${PROJECT_SOURCE_DIR}/Conf.cmake)
 #
 # Compiler SPECIFIC
 #
+# On CMake 3.25 or older CXX_COMPILER_FRONTEND_VARIANT is not always set
 
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
- MESSAGE("COMPILER: Clang")
- # set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
- set(BUILD_SHARED_LIBS OFF)
- # set(CMAKE_EXE_LINKER_FLAGS "-static")
-elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
- set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
- set(BUILD_SHARED_LIBS OFF)
- set(CMAKE_EXE_LINKER_FLAGS "-static")
- # add_compile_options(-fPIC)
- set(CMAKE_POSITION_INDEPENDENT_CODE ON)
- set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
- MESSAGE("COMPILER: Clang")
-elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel") 
- MESSAGE("COMPILER: Intel")
- add_compile_options(-fPIC)
-elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
- MESSAGE("COMPILER: MSVC")
- set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
- set(BUILD_SHARED_LIBS OFF)
- set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
-else()
-  MESSAGE("COMPILER: UKNOWN COMPILER ${CMAKE_CXX_COMPILER_ID}")
+if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "")
+    set(CMAKE_CXX_COMPILER_FRONTEND_VARIANT "${CMAKE_CXX_COMPILER_ID}")
 endif()
 
- 
+MESSAGE("CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
+MESSAGE("CMAKE_CXX_SIMULATE_ID: ${CMAKE_CXX_SIMULATE_ID}")
+MESSAGE("CMAKE_CXX_COMPILER_FRONTEND_VARIANT: ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
+
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    set(BUILD_SHARED_LIBS OFF)
+
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    set(BUILD_SHARED_LIBS OFF)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
+    if ("${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}" MATCHES "MSVC")
+        set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+        set(BUILD_SHARED_LIBS OFF)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W1")
+        MESSAGE("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+        MESSAGE("CMAKE_Fortran_FLAGS: ${CMAKE_Fortran_FLAGS}")
+    elseif()
+        add_compile_options(-fPIC)
+    endif()
+    find_package(IntelSYCL REQUIRED)
+
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+    set(BUILD_SHARED_LIBS OFF)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    find_package(IntelSYCL REQUIRED)
+
+else()
+    MESSAGE("COMPILER: UKNOWN COMPILER ${CMAKE_CXX_COMPILER_ID}")
+endif()
+MESSAGE("CMAKE_ROOT: ${CMAKE_ROOT}")
+set(CMAKE_Fortran_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+set(CMAKE_Fortran_USE_RESPONSE_FILE_FOR_INCLUDES 1)
+#set(CMAKE_Fortran_USE_RESPONSE_FILE_FOR_LIBRARIES 1)
+SET(CMAKE_NINJA_FORCE_RESPONSE_FILE 1 )
 #
 # external packages
 #
@@ -110,7 +140,7 @@ set_property(CACHE OPS_FINAL_TARGET PROPERTY STRINGS
 # OS Configuration:
 #  defines: compile flags & user supplied paths and includes if not using conan
 #
-
+MESSAGE("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
   add_compile_definitions(_LINUX _UNIX _TCL85)
@@ -131,10 +161,16 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(OPS_OS_Specific_libs INTERFACE wsock32 ws2_32)
     add_compile_definitions(_WIN32 _TCL85)
+   # add_compile_options(/fPIC)
   if (NOT_USING_CONAN)
     include(OpenSeesDependenciesWin)
   endif()      
 endif()
+
+MESSAGE("CMAKE_GENERATOR: ${CMAKE_GENERATOR}")
+MESSAGE("CMAKE_GENERATOR_TOOLSET: ${CMAKE_GENERATOR_TOOLSET}")
+MESSAGE("CMAKE_GENERATOR_PLATFORM: ${CMAKE_GENERATOR_PLATFORM}")
+MESSAGE("CMAKE_DEFAULT_BUILD_TOOL: ${CMAKE_DEFAULT_BUILD_TOOL}")
 
 #==============================================================================
 #                            General Setup
@@ -293,8 +329,8 @@ if(LAPACK_FOUND)
   message(STATUS "LAPACK_LINKER_FLAGS = ${LAPACK_LINKER_FLAGS}")
   message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}" )
 else()
-  add_subdirectory("${PROJECT_SOURCE_DIR}/OTHER/BLAS") 
-  add_subdirectory("${PROJECT_SOURCE_DIR}/OTHER/LAPACK")
+  add_subdirectory("${PROJECT_SOURCE_DIR}/OTHER/BLAS" EXCLUDE_FROM_DEFAULT_BUILD) 
+  add_subdirectory("${PROJECT_SOURCE_DIR}/OTHER/LAPACK" EXCLUDE_FROM_DEFAULT_BUILD)
   set(LAPACK_LIBRARIES LAPACK)
 endif()
 
@@ -316,18 +352,27 @@ if(MPI_FOUND)
   #add_subdirectory("${PROJECT_SOURCE_DIR}/OTHER/MUMPS_5.4.1")
   #if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   if (NOT DEFINED MUMPS_DIR)
-  #    include(ExternalProject)
-  #    ExternalProject_Add(mumps
-  #       GIT_REPOSITORY    https://github.com/scivision/mumps.git
-  #       GIT_TAG           v5.5.1.5
-  #       SOURCE_DIR        "${CMAKE_BINARY_DIR}/mumps-src"
-  #       BINARY_DIR        "${CMAKE_BINARY_DIR}"
-  #       INSTALL_COMMAND   ""
-  #     )
-  #
-  #    set (MUMPS_LIBRARIES "${CMAKE_BINARY_DIR}/libdmumps.lib;${CMAKE_BINARY_DIR}/libmumps_common.lib;${CMAKE_BINARY_DIR}/libpord.lib")
-     set (MUMPS_FLAG -D_NOMUMPS)
-     set (MUMPS_LIBRARIES "")
+  message("MUMPS_DIR not defined. Build it from source...")
+  ##ToDo: Add -DMUMPS_<arg> inputs options to top-level configure command
+     include(ExternalProject)
+      ExternalProject_Add(mumps
+        GIT_REPOSITORY    https://github.com/scivision/mumps.git
+        GIT_TAG           v5.5.1.5
+        GIT_SHALLOW       True
+        PREFIX            "/mumps-extern"
+        CMAKE_CACHE_ARGS   "-Darith:STRING=d"
+        BUILD_ALWAYS      True
+        BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config <CONFIG>
+        INSTALL_COMMAND ""
+      )
+      ExternalProject_Get_property(mumps BINARY_DIR)
+      set (MUMPS_FLAG -D_MUMPS)  
+      if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set (MUMPS_LIBRARIES "${BINARY_DIR}/dmumps;${BINARY_DIR}/mumps_common;${BINARY_DIR}/pord")
+      else()
+        set (MUMPS_LIBRARIES "${BINARY_DIR}/libdmumps.a;${BINARY_DIR}/libmumps_common.a;${BINARY_DIR}/libpord.a")
+      endif()
+      message("MUMPS_LIBRARIES: ${MUMPS_LIBRARIES}")
   else()
      set (MUMPS_FLAG -D_MUMPS)  
      if(CMAKE_SYSTEM_NAME STREQUAL "Windows")

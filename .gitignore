@@ -93,3 +93,6 @@ bin
 CMakeListsmy.txt
 __pycache__
 *.dat
+node_modules
+package-lock.json
+package.json
