@@ -93,9 +93,10 @@ jobs:
             CC: ${{ steps.setup-fortran.outputs.cc }}
         
         - name: Build
+          shell: cmd
           run: |
             mkdir build
             cd build
-            & "$ONEAPI_ROOT\setvars.bat" intel64 --force
+            "%ONEAPI_ROOT%\setvars.bat" intel64 
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
