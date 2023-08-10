@@ -96,11 +96,6 @@ jobs:
           run: |
             mkdir build
             cd build
-            call "%ONEAPI_ROOT%\setvars.bat" --force
+            . "%ONEAPI_ROOT%\setvars.bat" intel64 --force
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
-          env:
-            FC: ${{ steps.setup-fortran.outputs.fc }}
-            CC: ${{ steps.setup-fortran.outputs.cc }}
-
-
