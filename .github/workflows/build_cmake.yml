@@ -73,21 +73,29 @@ jobs:
         steps:
         - name: Checkout Sources
           uses: actions/checkout@v2
+          
         - name: Setup MSBuild
           uses: microsoft/setup-msbuild@v1
+          
         - name: Setup Fortran
           uses: mckee107/setup-fortran@v1.1.1
           with:
             compiler: intel
-            version: 2023.2
+            version: latest
             
+        - name: Set Environment
+          run: |
+            ${{ env.FC }} --version
+            ${{ env.CC }} --version
+          env:
+            FC: ${{ steps.setup-fortran.outputs.fc }}
+            CC: ${{ steps.setup-fortran.outputs.cc }}
+        
         - name: Build
           shell: cmd 
           run: |
             mkdir build
             cd build
-            echo "FC:%FC%"
-            echo "CC:%CC%"
             call "%ONEAPI_ROOT%\setvars.bat" --force
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
