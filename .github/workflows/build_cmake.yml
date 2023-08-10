@@ -78,7 +78,7 @@ jobs:
           uses: microsoft/setup-msbuild@v1
           
         - name: Setup Fortran
-          uses: mckee107/setup-fortran@v1.1.1
+          uses: mckee107/setup-fortran@v1.1.2
           with:
             compiler: intel
             version: 2023.2
