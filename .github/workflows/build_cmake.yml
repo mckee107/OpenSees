@@ -80,12 +80,17 @@ jobs:
           with:
             compiler: intel
             version: 2023.2
-          
+            
         - name: Build
           shell: cmd
+          env: |
+            FC: ${{ steps.setup-fortran.outputs.fc }}
+            CC: ${{ steps.setup-fortran.outputs.cc }}        
           run: |
             mkdir build
             cd build
+            echo "FC:%FC%"
+            echo "CC:%CC%"
             call "%ONEAPI_ROOT%\setvars.bat" --force
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
