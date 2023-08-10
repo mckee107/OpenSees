@@ -84,16 +84,10 @@ jobs:
             compiler: intel
             version: 2023.2
             
-        - name: Set Environment
-          run: |
-            ${{ env.FC }} --version
-            ${{ env.CC }} --version
-          env:
-            FC: ${{ steps.setup-fortran.outputs.fc }}
-            CC: ${{ steps.setup-fortran.outputs.cc }}
-            CMAKE_CXX_COMPILER: $CC
-            CMAKE_Fortran_COMPILER: $FC
-        
+        #- name: Set Environment
+        #  run: |
+        #    ${{ env.FC }} --version
+        #    ${{ env.CC }} --version
         - name: Build
           shell: cmd
           run: |
@@ -101,3 +95,10 @@ jobs:
             cd build
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
+          env:
+            FC: ${{ steps.setup-fortran.outputs.fc }}
+            CC: ${{ steps.setup-fortran.outputs.cc }}
+            CMAKE_CXX_COMPILER: $CC
+            CMAKE_Fortran_COMPILER: $FC
+        
+        
