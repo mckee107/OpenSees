@@ -78,7 +78,7 @@ jobs:
           with:
             python-version: "3.11"
         - name: Install conan
-          run: python3 -m pip install conan==1.60.0
+          run: python3 -m pip install conan
           
         - name: Setup Fortran
           uses: mckee107/setup-oneAPI@main
@@ -91,6 +91,7 @@ jobs:
           run: |
             mkdir build
             cd build
+            conan --version
             cmake --version
             conan install .. --build missing
             cmake .. 
