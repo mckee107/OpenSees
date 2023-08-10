@@ -91,6 +91,8 @@ jobs:
           env:
             FC: ${{ steps.setup-fortran.outputs.fc }}
             CC: ${{ steps.setup-fortran.outputs.cc }}
+            CMAKE_CXX_COMPILER: $CC
+            CMAKE_Fortran_COMPILER: $FC
         
         - name: Build
           shell: cmd
