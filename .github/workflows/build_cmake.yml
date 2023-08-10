@@ -82,10 +82,7 @@ jobs:
             version: 2023.2
             
         - name: Build
-          shell: cmd
-          env: |
-            FC: ${{ steps.setup-fortran.outputs.fc }}
-            CC: ${{ steps.setup-fortran.outputs.cc }}        
+          shell: cmd 
           run: |
             mkdir build
             cd build
