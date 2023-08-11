@@ -69,7 +69,8 @@ jobs:
 
   build-windows:
         name: Windows build
-        runs-on: [windows-latest]
+        #runs-on: [windows-latest]
+        runs-on: self-hosted
         steps:
         - name: Checkout Sources
           uses: actions/checkout@v2
