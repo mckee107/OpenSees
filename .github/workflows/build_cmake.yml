@@ -94,7 +94,8 @@ jobs:
             cd build
             conan --version
             cmake --version
-            conan install .. --build missing
+            conan config install -t dir ../.github/.conan
+            conan install .. --build missing -pr:h=OPS_Win_Intel -pr:b=OPS_Win_Intel
             cmake .. 
             cmake --build . --target OpenSeesTcl -j8
           env:
