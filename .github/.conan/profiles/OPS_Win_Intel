@@ -1,0 +1,15 @@
+[settings]
+arch=x86_64
+build_type=Release
+compiler=intel-cc
+compiler.version=2023.2
+compiler.mode=icx
+os=Windows
+[tool_requires]
+[env]
+CC=icx
+CXX=icx
+Fortran=ifx
+
+[conf]
+tools.intel:installation_path=C:/Program Files (x86)/Intel/oneAPI/
