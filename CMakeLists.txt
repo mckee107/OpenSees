@@ -300,7 +300,7 @@ if(MPI_FOUND)
 
   endif()
 
-  add_subdirectory("${OPS_BUNDLED_DIR}/SuperLU_DIST_4.3/SRC")
+  add_subdirectory("${OPS_BUNDLED_DIR}/SuperLU_DIST_4.3")
   include_directories("${OPS_BUNDLED_DIR}/SuperLU_DIST_4.3/SRC")
   add_subdirectory("${OPS_BUNDLED_DIR}/METIS")    
   include_directories("${OPS_BUNDLED_DIR}/METIS") 
