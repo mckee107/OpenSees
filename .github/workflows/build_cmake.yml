@@ -37,7 +37,7 @@ jobs:
         cd build
         conan install .. --build missing
         cmake ..
-        cmake --build . -j8
+        cmake --build . --target OpenSees -j8
 
         #- name: Verification
         #  run: |
