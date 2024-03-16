@@ -1,8 +1,8 @@
 name: CMake Build
 
 env:
-  CMAKE_VERSION: 3.20.1
-  BUILD_TYPE: Debug
+  CMAKE_VERSION: 3.26.3
+  BUILD_TYPE: Release
 
 on:
   push:
@@ -32,6 +32,7 @@ jobs:
 
     - name: Build
       run: |
+        sudo apt install -y liblapack-dev libopenmpi-dev libmkl-rt libmkl-blacs-openmpi-lp64 libscalapack-openmpi-dev
         mkdir build
         cd build
         conan install .. --build missing
