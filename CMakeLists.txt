@@ -211,7 +211,7 @@ include_directories(${OPS_INCLUDE_DIRS})
 #
 
 add_subdirectory("${OPS_BUNDLED_DIR}/SuperLU_5.1.1")
-include_directories("${OPS_BUNDLED_DIR}/SuperLU_5.1.1")
+include_directories("${OPS_BUNDLED_DIR}/SuperLU_5.1.1/SRC")
 set (SUPERLU_LIBRARIES SUPERLU)
 add_subdirectory("${OPS_BUNDLED_DIR}/UMFPACK")
 include_directories("${OPS_BUNDLED_DIR}/UMFPACK")
