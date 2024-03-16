@@ -36,7 +36,7 @@ jobs:
         mkdir build
         cd build
         conan install .. --build missing
-        cmake ..
+        cmake .. -DMUMPS_DIR=$PWD/../../mumps/build -DOPENMPI=TRUE -DSCALAPACK_LIBRARIES="/usr/lib/x86_64-linux-gnu/libmkl_blacs_openmpi_lp64.so;/usr/lib/x86_64-linux-gnu/libscalapack-openmpi.so.2.1"
         cmake --build . --target OpenSees -j8
 
         #- name: Verification
